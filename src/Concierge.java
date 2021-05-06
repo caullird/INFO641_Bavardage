@@ -3,6 +3,10 @@ import java.util.ArrayList;
 public class Concierge {
     private ArrayList<PapotageListener> papotageListeners;
 
+    public ArrayList<PapotageListener> getPapotageListeners() {
+        return papotageListeners;
+    }
+
     public Concierge() {
         this.papotageListeners = new ArrayList<>();
     }
@@ -11,12 +15,13 @@ public class Concierge {
         this.papotageListeners.add(listener);
     }
 
-    public void newBavard(String nom) {
+    public Bavard newBavard(String nom) {
         Bavard b = new Bavard(nom, this);
         this.addPapotageListener(b);
+        return b;
     }
 
-    public void sendMessage(PapotageEvent papotageEvent , Bavard requester, Bavard receiver) {
+    public void sendMessage(PapotageEvent papotageEvent) {
         for (PapotageListener papotageListener : papotageListeners) {
             papotageListener.receiveMessage(papotageEvent);
         }
