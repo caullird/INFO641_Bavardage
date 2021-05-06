@@ -23,6 +23,12 @@ public class PapotageEvent extends EventObject {
         this.body = body;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "PapotageEvent{" +
+                "source='" + this.getSource() + '\'' +
+                "subject='" + subject + '\'' +
+                ", body='" + body + '\'' +
+                '}';
+    }
 }

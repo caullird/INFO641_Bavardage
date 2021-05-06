@@ -26,14 +26,17 @@ public class Bavard implements PapotageListener {
         this.concierge = concierge;
     }
 
-    public void sendMessage(Bavard requester, Bavard receiver, String subject, String body) {
+    public void sendMessage(String subject, String body) {
         PapotageEvent papotageEvent = new PapotageEvent(this,subject,body);
-        this.concierge.sendMessage(papotageEvent, requester, receiver);
+        this.concierge.sendMessage(papotageEvent);
     }
 
     public void receiveMessage(PapotageEvent papotageEvent) {
         System.out.println(papotageEvent);
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }
-
