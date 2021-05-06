@@ -1,9 +1,12 @@
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class InterfaceGestionnaire extends JFrame {
+public class InterfaceGestionnaire extends JFrame implements ActionListener {
     private Concierge concierge;
 
     private JPanel panel1 = new JPanel();
@@ -14,7 +17,7 @@ public class InterfaceGestionnaire extends JFrame {
     private JLabel labelNom = new JLabel("Nom du bavard :");
 
     private String message = "";
-    private JTextField corps = new JTextField("",10);
+    private JTextField corps = new JTextField("",15);
 
     private JTextPane zoneMessages = new JTextPane();
     JEditorPane jEditorPane = new JEditorPane();
@@ -25,7 +28,7 @@ public class InterfaceGestionnaire extends JFrame {
     public InterfaceGestionnaire(Concierge c){
         super();
 
-        //definition du titre, det de la position de la fenetre
+        // Création de la fenêtre du concierge
         setTitle("Fenetre du concierge");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -34,18 +37,10 @@ public class InterfaceGestionnaire extends JFrame {
         JScrollPane scrollPane = new JScrollPane(jEditorPane);
         jEditorPane.setEditorKit(kit);
 
-
-        String htmlString = "<html>"
-                + "<body>"
-                + "<p><center><font color=red>Il n'y a pas encore d'utilisateur</font></center></p>"
-                + "<p></p>"
-                + "<p></p>"
-                + "</body>";
-
-        jEditorPane.setText(htmlString);
+        jEditorPane.setText("<font color=red>Il n'y a pas encore d'utilisateur</font>");
 
         // Ajout des boutons comme ecouteurs
-        //boutonNewb.addActionListener(this);
+        boutonNewb.addActionListener(this);
         boutonNewb.setActionCommand("createBavard");
 
         // Mise en place de panel2
@@ -56,26 +51,27 @@ public class InterfaceGestionnaire extends JFrame {
 
         // Creation du container
         Container mainContainer = this.getContentPane();
+        System.out.println(mainContainer);
         mainContainer.add(panel1);
 
         // Creation des bordures
-        Border border1=  BorderFactory.createEmptyBorder(30,35,30,35);
-        Border border2=  BorderFactory.createEmptyBorder(20,45,20,45);
+        Border border1 =  BorderFactory.createEmptyBorder(30,35,30,35);
+        Border border2 =  BorderFactory.createEmptyBorder(20,45,20,45);
 
         // Creation du Layout
         BoxLayout layout = new BoxLayout(panel1,BoxLayout.Y_AXIS);
 
         // Mise en place des labels
-        Font font = new Font("Arial",Font.ITALIC,24);
-        Font font2 = new Font("Arial",Font.ITALIC,18);
+        Font font = new Font("Helvetica",Font.BOLD,24);
+        Font font2 = new Font("Helvetica",Font.BOLD,18);
+
         labelDiscussion.setFont(font);
-        labelNom.setFont(font2);
         labelConnectes.setFont(font);
-        labelDiscussion.setForeground(Color.blue.darker().darker());
-        labelConnectes.setForeground(Color.blue);
-        labelNom.setForeground(Color.darkGray);
-        //Border border = LineBorder.createGrayLineBorder();
-        //labelDiscussion.setBorder(border);
+        labelNom.setFont(font2);
+
+        labelDiscussion.setForeground(Color.black);
+        labelConnectes.setForeground(Color.black);
+        labelNom.setForeground(Color.black);
 
         // Creation de la zone Messages
         this.zoneMessages.setEditable(false);
@@ -85,12 +81,9 @@ public class InterfaceGestionnaire extends JFrame {
         this.zoneMessages.setPreferredSize(new Dimension(250, 185));
         this.zoneMessages.setMinimumSize(new Dimension(10, 10));
 
-
-
         // Centrage des elements
         labelDiscussion.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.zoneMessages.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //this.zoneBConnectes.setAlignmentX(Component.CENTER_ALIGNMENT);
         scrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
         scrollPane2.setAlignmentX(Component.CENTER_ALIGNMENT);
         boutonNewb.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -104,11 +97,15 @@ public class InterfaceGestionnaire extends JFrame {
         panel1.add(labelDiscussion);
         panel1.add(scrollPane2);
         panel1.add(labelConnectes);
-        //panel1.add(scrollPane);
+        panel1.add(scrollPane);
         panel1.add(scrollPane, BorderLayout.CENTER);
         panel1.add(panel2);
 
         // On relie le concierge et l'interface du gestionnaire
+        InterfaceRegister iC = new InterfaceRegister();
+        iC.setConcierge(c);
+        iC.setIg(this);
+
         this.concierge = c;
         this.concierge.setInterfaceGestionnaire(this);
 
@@ -119,5 +116,9 @@ public class InterfaceGestionnaire extends JFrame {
     }
 
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("test");
 
+    }
 }
