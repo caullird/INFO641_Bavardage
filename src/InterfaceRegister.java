@@ -16,9 +16,8 @@ public class InterfaceRegister extends JFrame implements ActionListener {
     private JPanel panel = new JPanel();
 
     private static Concierge concierge = new Concierge();
-    private InterfaceGestionnaire ig;
 
-    public InterfaceRegister(){
+    public InterfaceRegister(Concierge c){
         super();
 
         setTitle("Connexion");
@@ -51,16 +50,13 @@ public class InterfaceRegister extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-    public static void setConcierge(Concierge concierge) {
-        InterfaceRegister.concierge = concierge;
-    }
-
-    public void setIg(InterfaceGestionnaire ig) {
-        this.ig = ig;
-    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand() == "signIn") {
+            System.out.println(corps.getText());
+        }
+
 
     }
 }

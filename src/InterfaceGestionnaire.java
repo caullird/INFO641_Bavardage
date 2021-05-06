@@ -101,11 +101,6 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
         panel1.add(scrollPane, BorderLayout.CENTER);
         panel1.add(panel2);
 
-        // On relie le concierge et l'interface du gestionnaire
-        InterfaceRegister iC = new InterfaceRegister();
-        iC.setConcierge(c);
-        iC.setIg(this);
-
         this.concierge = c;
         this.concierge.setInterfaceGestionnaire(this);
 

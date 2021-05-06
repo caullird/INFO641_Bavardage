@@ -7,6 +7,6 @@ public class MainTest {
         bv2.sendMessage("aze","aezaez");
 
         InterfaceGestionnaire i = new InterfaceGestionnaire(concierge);
-
+        InterfaceRegister iC = new InterfaceRegister(concierge);
     }
 }
