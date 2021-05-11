@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Concierge {
     private ArrayList<Bavard> bavards;
     private ArrayList<PapotageListener> papotageListeners;
-    private InterfaceGestionnaire ig;
+    private InterfaceGestionnaire iG;
 
     public ArrayList<Bavard> getBavards() {
         return bavards;
@@ -14,7 +14,7 @@ public class Concierge {
     }
 
     public InterfaceGestionnaire getIg() {
-        return ig;
+        return iG;
     }
 
     public Concierge() {
@@ -36,27 +36,37 @@ public class Concierge {
         return b;
     }
 
-    public void sendMessage(PapotageEvent papotageEvent) {
-        for (PapotageListener papotageListener : papotageListeners) {
-            papotageListener.receiveMessage(papotageEvent);
-        }
+    public void sendMessageOne(PapotageEvent message, PapotageListener receiver, PapotageListener requestor) {
+        receiver.getiB().displayMessageReceived(message,requestor);
+        requestor.getiB().displayMessageSend(message,receiver);
+        iG.displayMessage(message, requestor, receiver);
     }
 
-    public void bavardSignIn(String name) {
+    public void sendMessageAll(PapotageEvent message, PapotageListener requestor){
+
+    }
+
+    public Bavard bavardSignIn(String name) {
         for (Bavard bavard : this.getBavards()) {
             if (bavard.getName().equals(name)) {
                 bavard.setConnected(true);
                 this.addPapotageListener(bavard);
                 System.out.println("Bavard " + name + " connected");
-                this.getIg().updateConnectedBavard(bavards);
-                return;
+                this.getIg().displayOnlineUser();
+                return bavard;
             }
         }
         // @TODO display error : user don't exist
         System.out.println("error : user don't exist");
+        return null;
     }
 
     public void setInterfaceGestionnaire(InterfaceGestionnaire unIg){
-        this.ig = unIg;
+        this.iG = unIg;
+    }
+
+    public void bavardSignOut(Bavard bavard) {
+        bavard.setConnected(false);
+        this.iG.displayOnlineUser();
     }
 }
