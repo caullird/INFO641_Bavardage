@@ -5,6 +5,5 @@ public class MainTest {
         Bavard bv2 = concierge.newBavard("bv2");
 
         InterfaceGestionnaire i = new InterfaceGestionnaire(concierge);
-        InterfaceRegister iC = new InterfaceRegister(concierge);
     }
 }
