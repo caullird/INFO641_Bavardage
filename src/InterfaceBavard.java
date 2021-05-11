@@ -109,25 +109,6 @@ public class InterfaceBavard extends JFrame implements ActionListener {
         }
     }
 
-    public void displayOnlineUser() {
-        System.out.println("test_list");
-        String charString = "";
-        if (concierge.getPapotageListeners().size()==1) {
-            charString += "<center><font color=#666666>Il n'y a pas encore d'utilisateur</font></center>";
-        }else {
-            for (PapotageListener bavard : concierge.getPapotageListeners()) {
-                if (!bavard.getName().equals(this.bavard.getName())){
-                    if (bavard.getConnected()) {
-                        charString += bavard.getName() + " : " + "<font color=green>en ligne</font>";
-                    }else {
-                        charString += bavard.getName() + " : " + "<font color=red>hors ligne</font>";
-                    }
-                }
-            }
-        }
-        connectedList.setText(charString);
-    }
-
     public void displayMessageReceived(PapotageEvent message, PapotageListener requestor) {
         String charString ="";
         charString += this.messageReceivedString = this.messageReceivedString +
