@@ -4,10 +4,12 @@ public class Bavard implements PapotageListener {
 
     private String name;
     private Concierge concierge;
+    private Boolean connected;
 
     public Bavard(String name, Concierge concierge) {
         this.name = name;
         this.concierge = concierge;
+        this.connected = false;
     }
 
     public String getName() {
@@ -26,12 +28,21 @@ public class Bavard implements PapotageListener {
         this.concierge = concierge;
     }
 
+    public Boolean getConnected() {
+        return connected;
+    }
+
+    public void setConnected(Boolean connected) {
+        this.connected = connected;
+    }
+
     public void sendMessage(String subject, String body) {
         PapotageEvent papotageEvent = new PapotageEvent(this,subject,body);
         this.concierge.sendMessage(papotageEvent);
     }
 
     public void receiveMessage(PapotageEvent papotageEvent) {
+        // Display message
         System.out.println(papotageEvent);
     }
 

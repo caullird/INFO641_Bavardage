@@ -5,6 +5,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class InterfaceGestionnaire extends JFrame implements ActionListener {
     private Concierge concierge;
@@ -25,8 +26,10 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
 
     private JButton boutonNewb = new JButton("Ajouter un bavard");
 
-    public InterfaceGestionnaire(Concierge c){
+    public InterfaceGestionnaire(Concierge concierge){
         super();
+
+        this.concierge = concierge;
 
         // Création de la fenêtre du concierge
         setTitle("Fenetre du concierge");
@@ -101,8 +104,7 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
         panel1.add(scrollPane, BorderLayout.CENTER);
         panel1.add(panel2);
 
-        this.concierge = c;
-        this.concierge.setInterfaceGestionnaire(this);
+        concierge.setInterfaceGestionnaire(this);
 
         // Creation de l'interface connection et on relie le concierge et l'interface du gestionnaire à iC
 
@@ -110,10 +112,21 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("test");
+        if (e.getActionCommand() == "createBavard") {
+            this.concierge.newBavard(corps.getText());
+            corps.setText("");
+        }
+    }
 
+    public void updateConnectedBavard(ArrayList<Bavard> bavards) {
+        ArrayList<String> connectedBavad = new ArrayList<>();
+        for (Bavard bavard : bavards) {
+            if (bavard.getConnected()) {
+                connectedBavad.add(bavard.getName());
+            }
+        }
+        this.jEditorPane.setText(String.join(", ",connectedBavad));
     }
 }

@@ -8,6 +8,8 @@ import java.awt.event.ActionListener;
 
 public class InterfaceRegister extends JFrame implements ActionListener {
 
+    private Concierge concierge;
+
     private JButton boutonConn = new JButton("Connexion");
 
     private JLabel label = new JLabel("Nom du bavard");
@@ -15,10 +17,10 @@ public class InterfaceRegister extends JFrame implements ActionListener {
 
     private JPanel panel = new JPanel();
 
-    private static Concierge concierge = new Concierge();
-
-    public InterfaceRegister(Concierge c){
+    public InterfaceRegister(Concierge concierge){
         super();
+
+        this.concierge = concierge;
 
         setTitle("Connexion");
         setLocation(250, 400);
@@ -50,13 +52,11 @@ public class InterfaceRegister extends JFrame implements ActionListener {
         setVisible(true);
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand() == "signIn") {
-            System.out.println(corps.getText());
+            this.concierge.bavardSignIn(corps.getText());
+            corps.setText("");
         }
-
-
     }
 }
