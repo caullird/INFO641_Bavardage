@@ -10,43 +10,33 @@ public class InterfaceRegister extends JFrame implements ActionListener {
 
     private Concierge concierge;
 
-    private JButton boutonConn = new JButton("Connexion");
+    private JButton loginButton = new JButton("Connexion");
 
-    private JLabel label = new JLabel("Nom du bavard");
-    private JTextField corps = new JTextField("",10);
+    private JLabel labelName = new JLabel("Nom du bavard");
+    private JTextField inputName = new JTextField("",25);
 
-    private JPanel panel = new JPanel();
+    private JPanel loginPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-    public InterfaceRegister(Concierge concierge){
+    private InterfaceGestionnaire iG;
+
+    public InterfaceRegister(){
         super();
-
-        this.concierge = concierge;
 
         setTitle("Connexion");
         setLocation(250, 400);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Font font = new Font("Arial",Font.BOLD,14);
-        label.setFont(font);
-
         // Ajout des boutons comme ecouteurs
-        boutonConn.addActionListener(this);
-        boutonConn.setActionCommand("signIn");
-
-        // Creation des bordures
-        Border border1=  BorderFactory.createEmptyBorder(20,25,20,25);
+        loginButton.addActionListener(this);
+        loginButton.setActionCommand("signIn");
 
         // Ajout des elements dans le panel
-        panel.setBorder(border1);
-        panel.add(label);
-        panel.add(corps);
-        panel.add(boutonConn);
-        setContentPane(panel);
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(20,25,20,25));
+        loginPanel.add(labelName);
+        loginPanel.add(inputName);
+        loginPanel.add(loginButton);
+        setContentPane(loginPanel);
 
-        // Alignement des elements
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this.corps.setAlignmentX(Component.CENTER_ALIGNMENT);
-        this.boutonConn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         pack();
         setVisible(true);
@@ -55,8 +45,20 @@ public class InterfaceRegister extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand() == "signIn") {
-            this.concierge.bavardSignIn(corps.getText());
-            corps.setText("");
+            Bavard bavard = this.concierge.bavardSignIn(inputName.getText());
+            if(bavard != null){
+                bavard.getiB().setVisible(true);
+            }
         }
     }
+
+    public void setiG(InterfaceGestionnaire iG) {
+        this.iG = iG;
+    }
+
+    public Concierge setConcierge(Concierge c) {
+        return concierge = c;
+    }
+
+
 }
