@@ -5,11 +5,20 @@ public class Bavard implements PapotageListener {
     private String name;
     private Concierge concierge;
     private Boolean connected;
+    private InterfaceBavard iB = null;
 
     public Bavard(String name, Concierge concierge) {
         this.name = name;
         this.concierge = concierge;
         this.connected = false;
+    }
+
+    public InterfaceBavard getiB() {
+        return iB;
+    }
+
+    public void setiB(InterfaceBavard iB) {
+        this.iB = iB;
     }
 
     public String getName() {
@@ -36,9 +45,13 @@ public class Bavard implements PapotageListener {
         this.connected = connected;
     }
 
-    public void sendMessage(String subject, String body) {
+    public void sendMessageOne(String subject, String body, PapotageListener receiver, Bavard requestor) {
         PapotageEvent papotageEvent = new PapotageEvent(this,subject,body);
-        this.concierge.sendMessage(papotageEvent);
+        this.concierge.sendMessageOne(papotageEvent,receiver,requestor);
+    }
+
+    public void sendMessageAll(String subject, String body){
+
     }
 
     public void receiveMessage(PapotageEvent papotageEvent) {
