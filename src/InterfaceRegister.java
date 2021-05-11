@@ -37,7 +37,6 @@ public class InterfaceRegister extends JFrame implements ActionListener {
         loginPanel.add(loginButton);
         setContentPane(loginPanel);
 
-
         pack();
         setVisible(true);
     }
