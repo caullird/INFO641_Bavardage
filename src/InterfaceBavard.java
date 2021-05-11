@@ -131,7 +131,7 @@ public class InterfaceBavard extends JFrame implements ActionListener {
     public void displayMessageReceived(PapotageEvent message, PapotageListener requestor) {
         String charString ="";
         charString += this.messageReceivedString = this.messageReceivedString +
-                "<b><font color=#FA1818>De : </font></b>"+ requestor.getName() +"<br/>" + "<b><font color=#FF3396>Sujet : </font></b>" + message.getSubject() + "<br/>" + message.getBody() +"<br/>";
+                "<b>De : </b>"+ requestor.getName() +"<br/>" + "<b>Sujet : </b>" + message.getSubject() + "<br/>" + message.getBody() +"<br/>";
 
         zoneReceived.setText(charString);
     }
