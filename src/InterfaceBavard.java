@@ -17,6 +17,14 @@ public class InterfaceBavard extends JFrame implements ActionListener {
     private JButton sendMessageButton = new JButton("Nouveau Message");
     private JButton disconnectButton = new JButton("Deconnexion");
 
+
+    private JPanel consolePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    private JLabel consoleName = new JLabel("Console : ");
+    private JTextField consoleInput = new JTextField("",25);
+    private JButton consoleButton = new JButton("Executer");
+
+
+
     JTextPane zoneReceived = new JTextPane();
     private String messageReceivedString = "";
     JTextPane zoneSend = new JTextPane();
@@ -78,12 +86,22 @@ public class InterfaceBavard extends JFrame implements ActionListener {
         panel.add(sendMessageButton);
         panel.add(disconnectButton);
 
+
+        consolePanel.setBorder(BorderFactory.createEmptyBorder(20,25,20,25));
+        consolePanel.add(consoleName);
+        consolePanel.add(consoleInput);
+        consolePanel.add(consoleButton);
+        panel.add(consolePanel);
+
         // Mise en place des deux boutons
         sendMessageButton.addActionListener(this);
         sendMessageButton.setActionCommand("newMessage");
 
         disconnectButton.addActionListener(this);
         disconnectButton.setActionCommand("disconnect");
+
+        consoleButton.addActionListener(this);
+        consoleButton.setActionCommand("execute");
 
         pack();
         this.setVisible(false);
@@ -107,6 +125,14 @@ public class InterfaceBavard extends JFrame implements ActionListener {
         if(e.getActionCommand().equals("newMessage")) { // Creation d'une interfaceMessage
             InterfaceMessage iM = new InterfaceMessage(bavard,concierge);
             iM.setConcierge(concierge);
+        }
+
+        if(e.getActionCommand().equals("execute")){
+            String command = consoleInput.getText();
+
+            if(command.contains("!ban")){
+                this.bavard.banUser(command);
+            }
         }
     }
 
