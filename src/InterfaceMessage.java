@@ -11,6 +11,9 @@ import javax.swing.border.Border;
 
 public class InterfaceMessage extends JFrame implements ActionListener{
 
+    private Bavard bavard;
+    private Concierge concierge;
+
     private JComboBox contactList = new JComboBox();
     private JLabel receiverLabel = new JLabel("Envoyé à :");
     private JLabel subjectLabel = new JLabel("Sujet du message :");
@@ -21,12 +24,10 @@ public class InterfaceMessage extends JFrame implements ActionListener{
     private JPanel inputPanel = new JPanel();
     private JPanel inputButton = new JPanel();
 
-    private JButton sendAllButton = new JButton("Envoyer a tous");
+    private JButton sendAllButton = new JButton("Envoyer à tous");
     private JButton sendOneButton = new JButton("Envoyer");
     private JButton annulationButton = new JButton("Annuler");
 
-    private Bavard bavard;
-    private Concierge concierge;
 
     // Constructeur
     public InterfaceMessage(Bavard bavard, Concierge concierge) {
@@ -51,7 +52,7 @@ public class InterfaceMessage extends JFrame implements ActionListener{
         sendOneButton.setActionCommand("sendOne");
 
         annulationButton.addActionListener(this);
-        annulationButton.setActionCommand("annulation");
+        annulationButton.setActionCommand("cancel");
 
         // Creation du container
         Container mainContainer = this.getContentPane();
@@ -93,16 +94,30 @@ public class InterfaceMessage extends JFrame implements ActionListener{
 
     // Utilisation des boutons
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("annulation")) { // Ferme la fenetre
+        if(e.getActionCommand().equals("cancel")) {
             this.dispose();
         }
 
-        if(e.getActionCommand().equals("sendOne")) { // Envoie un message a un seul destinataire
+        if(e.getActionCommand().equals("sendOne")) {
             Object selected = this.contactList.getSelectedItem();
             PapotageListener destinataire = this.findOneObject(selected);
             this.bavard.sendMessageOne(subjectField.getText(), messageField.getText(), destinataire,this.bavard);
             this.dispose();
         }
+
+        if(e.getActionCommand().equals("sendAll")){
+            this.bavard.sendMessageAll(subjectField.getText(),messageField.getText(),this.bavard);
+            this.dispose();
+        }
+    }
+
+    public PapotageListener findOneObject(Object selected) {
+        for(PapotageListener unPapotageListener : this.concierge.getPapotageListeners()) {
+            if (selected.equals(unPapotageListener.getName())){
+                return unPapotageListener;
+            }
+        }
+        return null;
     }
 
     public Bavard getBavard() {
@@ -111,15 +126,6 @@ public class InterfaceMessage extends JFrame implements ActionListener{
 
     public Concierge getConcierge() {
         return concierge;
-    }
-
-    public PapotageListener findOneObject(Object selected) {
-        for(PapotageListener pl : this.concierge.getPapotageListeners()) {
-            if (selected.equals(pl.getName())){
-                return pl;
-            }
-        }
-        return null;
     }
 
     public void setConcierge(Concierge concierge) {
