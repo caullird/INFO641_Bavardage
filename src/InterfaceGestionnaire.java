@@ -12,7 +12,7 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
 
     private JPanel listernerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     private JLabel listernerChatLabel = new JLabel("Liste des discussions :");
-    private JLabel listernerOnlineLabel = new JLabel("Bavards connectés :");
+    private JLabel listernerOnlineLabel = new JLabel("Console :");
 
     private String message = "";
     private JTextField corps = new JTextField("",15);
@@ -106,7 +106,6 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
 
     public void displayOnlineUser() {
         String charString = "";
-        System.out.println(concierge.getPapotageListeners());
         for (PapotageListener bavard : concierge.getPapotageListeners()) {
             if (bavard.getConnected()) {
                 charString +=  bavard.getName() + " : " + "<font color=green>est maintenant en ligne ! </font> <br/>";
@@ -117,12 +116,16 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
         connectedList.setText(charString);
     }
 
-    public void displayMessage(PapotageEvent mess, PapotageListener envoyeur, PapotageListener destinataire) {
+    public void displayMessage(PapotageEvent message, PapotageListener requestor, PapotageListener receiver) {
         String charString = "";
         charString += this.message = this.message +
-                "Message de " + envoyeur.getName()+ " à </b>" + destinataire.getName() + "<br/>"+
-                "<b>Sujet : </b>" + mess.getSubject() + "<br/> " + mess.getBody() + "<br/>";
+                "Message de " + requestor.getName()+ " à </b>" + receiver.getName() + "<br/>"+
+                "<b>Sujet : </b>" + message.getSubject() + "<br/> " + message.getBody() + "<br/>";
         zoneMessages.setText(charString);
+    }
+
+    public void displayAlertMessage(PapotageEvent unAlert){
+
     }
 
     public Concierge getConcierge() {
