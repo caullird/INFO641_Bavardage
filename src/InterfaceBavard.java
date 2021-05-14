@@ -27,9 +27,9 @@ public class InterfaceBavard extends JFrame implements ActionListener {
     JEditorPane connectedList = new JEditorPane();
 
     // Construction
-    public InterfaceBavard (Bavard b){
+    public InterfaceBavard (Bavard unBavard){
         super();
-        this.bavard = b;
+        this.bavard = unBavard;
 
         // Definition du titre et de la position de la fenetre
         this.setTitle("Messagerie de " + this.bavard.getName());
@@ -44,6 +44,7 @@ public class InterfaceBavard extends JFrame implements ActionListener {
         JScrollPane onlineUserScrollPane = new JScrollPane(connectedList);
         connectedList.setEditable(false);
         connectedList.setEditorKit(kit);
+        connectedList.setPreferredSize(new Dimension(250, 185));
         String charString = "<center><font color=#666666>Il n'y a pas encore d'utilisateur connecté</font></center>";
         connectedList.setText(charString);
 
@@ -107,6 +108,26 @@ public class InterfaceBavard extends JFrame implements ActionListener {
             InterfaceMessage iM = new InterfaceMessage(bavard,concierge);
             iM.setConcierge(concierge);
         }
+    }
+
+    public void displayOnlineUser() {
+        String charString = "";
+        for (PapotageListener bavard : concierge.getPapotageListeners()) {
+            if(!bavard.equals(this.bavard)){
+                if (bavard.getConnected()) {
+                    charString +=  bavard.getName() + " : " + "<font color=green>est maintenant en ligne ! </font> <br/>";
+                }else {
+                    charString +=  bavard.getName() + " : " + "<font color=red>est hors-ligne</font> <br/>";
+                }
+            }else{
+                charString +=  bavard.getName() + " : <font color=green>Vous êtes maintenant connecté </font> <br/>";
+            }
+        }
+        connectedList.setText(charString);
+    }
+
+    public void displayAlertMessage(PapotageEvent unAlert){
+
     }
 
     public void displayMessageReceived(PapotageEvent message, PapotageListener requestor) {
