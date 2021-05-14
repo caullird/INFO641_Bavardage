@@ -46,12 +46,13 @@ public class Bavard implements PapotageListener {
     }
 
     public void sendMessageOne(String subject, String body, PapotageListener receiver, Bavard requestor) {
-        PapotageEvent papotageEvent = new PapotageEvent(this,subject,body);
-        this.concierge.sendMessageOne(papotageEvent,receiver,requestor);
+        PapotageEvent unPapotageEvent = new PapotageEvent(this,subject,body);
+        this.concierge.sendMessageOne(unPapotageEvent,receiver,requestor);
     }
 
-    public void sendMessageAll(String subject, String body){
-
+    public void sendMessageAll(String subject, String body, Bavard requestor){
+        PapotageEvent unPapotageEvent = new PapotageEvent(this,subject,body);
+        this.concierge.sendMessageAll(unPapotageEvent,requestor);
     }
 
     public void receiveMessage(PapotageEvent papotageEvent) {
