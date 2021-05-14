@@ -13,7 +13,7 @@ public class Concierge {
         return papotageListeners;
     }
 
-    public InterfaceGestionnaire getIg() {
+    public InterfaceGestionnaire getiG() {
         return iG;
     }
 
@@ -28,6 +28,9 @@ public class Concierge {
 
     public void addPapotageListener(PapotageListener listener) {
         this.papotageListeners.add(listener);
+        for(Bavard bavard : bavards){
+            bavard.getiB().displayOnlineUser();
+        }
     }
 
     public Bavard newBavard(String name) {
@@ -39,30 +42,37 @@ public class Concierge {
     public void sendMessageOne(PapotageEvent message, PapotageListener receiver, PapotageListener requestor) {
         receiver.getiB().displayMessageReceived(message,requestor);
         requestor.getiB().displayMessageSend(message,receiver);
-        iG.displayMessage(message, requestor, receiver);
+        this.getiG().displayMessage(message, requestor, receiver);
     }
 
     public void sendMessageAll(PapotageEvent message, PapotageListener requestor){
+        for(PapotageListener unPapotageListener : this.getPapotageListeners()){
+            if(!unPapotageListener.equals(requestor)){
+                unPapotageListener.getiB().displayMessageReceived(message,requestor);
+                requestor.getiB().displayMessageSend(message,unPapotageListener);
+                this.getiG().displayMessage(message,requestor,unPapotageListener);
+            }
+        }
 
     }
 
-    public Bavard bavardSignIn(String name) {
+    public Bavard bavardSignIn(String name, InterfaceRegister iR) {
         for (Bavard bavard : this.getBavards()) {
             if (bavard.getName().equals(name)) {
                 bavard.setConnected(true);
                 this.addPapotageListener(bavard);
                 System.out.println("Bavard " + name + " connected");
-                this.getIg().displayOnlineUser();
+                this.getiG().displayOnlineUser();
+                iR.displayInformationMessage("Login : the user has been connected",false);
                 return bavard;
             }
         }
-        // @TODO display error : user don't exist
-        System.out.println("error : user don't exist");
+        iR.displayInformationMessage("Error : user don't exist",true);
         return null;
     }
 
-    public void setInterfaceGestionnaire(InterfaceGestionnaire unIg){
-        this.iG = unIg;
+    public void setInterfaceGestionnaire(InterfaceGestionnaire uniG){
+        this.iG = uniG;
     }
 
     public void bavardSignOut(Bavard bavard) {
