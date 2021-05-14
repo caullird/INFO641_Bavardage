@@ -34,11 +34,14 @@ public class InterfaceRegister extends JFrame implements ActionListener {
         loginButton.setActionCommand("signIn");
 
         // Ajout des elements dans le panel
-        loginPanel.setBorder(BorderFactory.createEmptyBorder(20,25,20,25));
         loginPanel.add(labelName);
         loginPanel.add(inputName);
         loginPanel.add(loginButton);
         setContentPane(loginPanel);
+
+
+        loginPanel.setPreferredSize(new Dimension(450, 120));
+
 
         pack();
         setVisible(true);
