@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Bavard implements PapotageListener {
 
+    private ArrayList<PapotageListener> bavards_ban;
     private String name;
     private Concierge concierge;
     private Boolean connected;
@@ -56,8 +57,19 @@ public class Bavard implements PapotageListener {
     }
 
     public void receiveMessage(PapotageEvent papotageEvent) {
-        // Display message
         System.out.println(papotageEvent);
+    }
+
+//    TODO : dorian
+    public void banUser(String command){
+        String user = command.replace("!ban ", "");
+        for(PapotageListener unPapotageListener : this.getConcierge().getPapotageListeners()){
+            if(unPapotageListener.equals(user)){
+                bavards_ban.add(unPapotageListener);
+                PapotageEvent unPapotageEvent = new PapotageEvent(this,"Blocked","Vous avez été bloqué par l'utilisateur");
+                this.concierge.sendMessageOne(unPapotageEvent,unPapotageListener,this);
+            }
+        }
     }
 
     @Override
