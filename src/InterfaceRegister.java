@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 public class InterfaceRegister extends JFrame implements ActionListener {
 
     private Concierge concierge;
+    private InterfaceGestionnaire iG;
 
     private JButton loginButton = new JButton("Connexion");
 
@@ -17,7 +18,9 @@ public class InterfaceRegister extends JFrame implements ActionListener {
 
     private JPanel loginPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-    private InterfaceGestionnaire iG;
+    private JTextPane alertMessage = new JTextPane();
+
+    HTMLEditorKit kit = new HTMLEditorKit();
 
     public InterfaceRegister(){
         super();
@@ -44,10 +47,21 @@ public class InterfaceRegister extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand() == "signIn") {
-            Bavard bavard = this.concierge.bavardSignIn(inputName.getText());
+            Bavard bavard = this.concierge.bavardSignIn(inputName.getText(),this);
             if(bavard != null){
                 bavard.getiB().setVisible(true);
             }
+        }
+    }
+
+    public void displayInformationMessage(String message, Boolean isError){
+        alertMessage.setEditable(false);
+        alertMessage.setEditorKit(kit);
+        loginPanel.add(alertMessage);
+        if(isError){
+            alertMessage.setText("<font color=red>" + message + "</font>");
+        }else{
+            alertMessage.setText("<font color=green>" + message + "</font>");
         }
     }
 
