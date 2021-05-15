@@ -1,6 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,14 +7,13 @@ import java.awt.event.ActionListener;
 public class InterfaceRegister extends JFrame implements ActionListener {
 
     private Concierge concierge;
-    private InterfaceGestionnaire iG;
-
-    private JButton loginButton = new JButton("Connexion");
-
-    private JLabel labelName = new JLabel("Nom du bavard");
-    private JTextField inputName = new JTextField("",25);
+    private InterfaceGestionnaire interfaceGestionnaire;
 
     private JPanel loginPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    private JPanel formPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    private JLabel labelName = new JLabel("Username:");
+    private JTextField inputName = new JTextField("",15);
+    private JButton loginButton = new JButton("Connexion");
 
     private JTextPane alertMessage = new JTextPane();
 
@@ -26,22 +23,37 @@ public class InterfaceRegister extends JFrame implements ActionListener {
         super();
 
         setTitle("Connexion");
-        setLocation(250, 400);
+        setLocation(140, 720);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+
+        // Creation du container
+        Container mainContainer = this.getContentPane();
+        mainContainer.add(this.loginPanel);
 
         // Ajout des boutons comme ecouteurs
         loginButton.addActionListener(this);
         loginButton.setActionCommand("signIn");
 
-        // Ajout des elements dans le panel
-        loginPanel.add(labelName);
-        loginPanel.add(inputName);
-        loginPanel.add(loginButton);
-        setContentPane(loginPanel);
+        // Creation du Layout
+        BoxLayout layout = new BoxLayout(loginPanel,BoxLayout.Y_AXIS);
 
+        // Mise en place de formPanel
+        formPanel.add(labelName);
+        formPanel.add(inputName);
+        formPanel.add(loginButton);
+        formPanel.setVisible(true);
 
-        loginPanel.setPreferredSize(new Dimension(450, 120));
+        // Mise en place de alertMessage
+        alertMessage.setEditable(false);
+        alertMessage.setEditorKit(kit);
 
+        // Mise en place de loginPanel
+        loginPanel.setLayout(layout);
+        loginPanel.add(formPanel);
+        loginPanel.add(alertMessage);
+        loginPanel.add(alertMessage);
+        loginPanel.setPreferredSize(new Dimension(450, 60));
 
         pack();
         setVisible(true);
@@ -58,18 +70,15 @@ public class InterfaceRegister extends JFrame implements ActionListener {
     }
 
     public void displayInformationMessage(String message, Boolean isError){
-        alertMessage.setEditable(false);
-        alertMessage.setEditorKit(kit);
-        loginPanel.add(alertMessage);
         if(isError){
-            alertMessage.setText("<font color=red>" + message + "</font>");
+            alertMessage.setText("<center><font color=red>" + message + "</font></center>");
         }else{
-            alertMessage.setText("<font color=green>" + message + "</font>");
+            alertMessage.setText("<center><font color=green>" + message + "</font></center>");
         }
     }
 
-    public void setiG(InterfaceGestionnaire iG) {
-        this.iG = iG;
+    public void setInterfaceGestionnaire(InterfaceGestionnaire interfaceGestionnaire) {
+        this.interfaceGestionnaire = interfaceGestionnaire;
     }
 
     public Concierge setConcierge(Concierge c) {
