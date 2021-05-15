@@ -1,11 +1,9 @@
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class InterfaceGestionnaire extends JFrame implements ActionListener {
     private Concierge concierge;
@@ -22,7 +20,7 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
     HTMLEditorKit kit = new HTMLEditorKit();
 
     private JPanel formPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    private JLabel labelNom = new JLabel("Nom du bavard :");
+    private JLabel labelName = new JLabel("Nom du bavard :");
     private JButton boutonNewb = new JButton("Ajouter un bavard");
 
     public InterfaceGestionnaire(Concierge concierge){
@@ -32,6 +30,7 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
 
         // Création de la fenêtre du concierge
         setTitle("Fenetre du concierge");
+        setLocation(100, 170);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // HTML
@@ -42,22 +41,24 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
         connectedList.setText("<font color=red>Il n'y a pas encore d'utilisateur connectés</font>");
 
         // Mise en place de formPanel
-        formPanel.add(labelNom);
+        formPanel.add(labelName);
         formPanel.add(corps);
         formPanel.add(boutonNewb);
         formPanel.setVisible(true);
 
         // Creation du container
         Container mainContainer = this.getContentPane();
-        System.out.println(mainContainer);
         mainContainer.add(listernerPanel);
 
         // Creation des bordures
-        Border border1 =  BorderFactory.createEmptyBorder(30,35,30,35);
-        Border border2 =  BorderFactory.createEmptyBorder(30,35,30,35);
+        Border border =  BorderFactory.createEmptyBorder(30,35,30,35);
 
         // Creation du Layout
         BoxLayout layout = new BoxLayout(listernerPanel,BoxLayout.Y_AXIS);
+
+        // Centrage des elements
+        listernerChatLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        listernerOnlineLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Creation de la zone Messages
         JScrollPane scrollPaneMessage = new JScrollPane(this.zoneMessages);
@@ -66,7 +67,7 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
         zoneMessages.setPreferredSize(new Dimension(250, 185));
 
         // Mise en place de listernerPanel
-        listernerPanel.setBorder(border1);
+        listernerPanel.setBorder(border);
         listernerPanel.setLayout(layout);
         listernerPanel.add(listernerChatLabel);
         listernerPanel.add(scrollPaneMessage);
@@ -80,7 +81,7 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
 
         InterfaceRegister iR = new InterfaceRegister();
         iR.setConcierge(concierge);
-        iR.setiG(this);
+        iR.setInterfaceGestionnaire(this);
         concierge.setInterfaceGestionnaire(this);
 
         pack();
@@ -94,10 +95,10 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
 
             if(!nameBavard.isEmpty()){
                 Bavard bavard = concierge.newBavard(nameBavard);
-                InterfaceBavard iB = new InterfaceBavard(bavard);
-                iB.setBavard(bavard);
-                iB.setConcierge(concierge);
-                bavard.setiB(iB);
+                InterfaceBavard interfaceBavard = new InterfaceBavard(bavard);
+                interfaceBavard.setBavard(bavard);
+                interfaceBavard.setConcierge(concierge);
+                bavard.setiB(interfaceBavard);
             }
 
             corps.setText("");
