@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class Concierge {
     private ArrayList<Bavard> bavards;
     private ArrayList<PapotageListener> papotageListeners;
-    private InterfaceGestionnaire iG;
+    private InterfaceGestionnaire interfaceGestionnaire;
 
     public ArrayList<Bavard> getBavards() {
         return bavards;
@@ -13,8 +13,8 @@ public class Concierge {
         return papotageListeners;
     }
 
-    public InterfaceGestionnaire getiG() {
-        return iG;
+    public InterfaceGestionnaire getInterfaceGestionnaire() {
+        return interfaceGestionnaire;
     }
 
     public Concierge() {
@@ -34,15 +34,15 @@ public class Concierge {
     }
 
     public Bavard newBavard(String name) {
-        Bavard b = new Bavard(name, this);
-        this.addBavard(b);
-        return b;
+        Bavard bavard = new Bavard(name, this);
+        this.addBavard(bavard);
+        return bavard;
     }
 
     public void sendMessageOne(PapotageEvent message, PapotageListener receiver, PapotageListener requestor) {
         receiver.getiB().displayMessageReceived(message,requestor);
         requestor.getiB().displayMessageSend(message,receiver);
-        this.getiG().displayMessage(message, requestor, receiver);
+        this.getInterfaceGestionnaire().displayMessage(message, requestor, receiver);
     }
 
     public void sendMessageAll(PapotageEvent message, PapotageListener requestor){
@@ -50,33 +50,35 @@ public class Concierge {
             if(!unPapotageListener.equals(requestor)){
                 unPapotageListener.getiB().displayMessageReceived(message,requestor);
                 requestor.getiB().displayMessageSend(message,unPapotageListener);
-                this.getiG().displayMessage(message,requestor,unPapotageListener);
+                this.getInterfaceGestionnaire().displayMessage(message,requestor,unPapotageListener);
             }
         }
 
     }
 
-    public Bavard bavardSignIn(String name, InterfaceRegister iR) {
+    public Bavard bavardSignIn(String name, InterfaceRegister interfaceRegister) {
         for (Bavard bavard : this.getBavards()) {
             if (bavard.getName().equals(name)) {
                 bavard.setConnected(true);
                 this.addPapotageListener(bavard);
                 System.out.println("Bavard " + name + " connected");
-                this.getiG().displayOnlineUser();
-                iR.displayInformationMessage("Login : the user has been connected",false);
+                this.getInterfaceGestionnaire().displayOnlineUser();
+                interfaceRegister.displayInformationMessage("Login : the user has been connected",false);
                 return bavard;
             }
         }
-        iR.displayInformationMessage("Error : user don't exist",true);
+
+        interfaceRegister.displayInformationMessage("L'utilsiateur " + name + " n'existe pas",true);
+
         return null;
     }
 
     public void setInterfaceGestionnaire(InterfaceGestionnaire uniG){
-        this.iG = uniG;
+        this.interfaceGestionnaire = uniG;
     }
 
     public void bavardSignOut(Bavard bavard) {
         bavard.setConnected(false);
-        this.iG.displayOnlineUser();
+        this.interfaceGestionnaire.displayOnlineUser();
     }
 }
