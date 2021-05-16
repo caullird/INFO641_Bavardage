@@ -4,17 +4,20 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.html.HTMLEditorKit;
+import java.awt.Color;
+import java.awt.EventQueue;
+import java.awt.Graphics;
 
-public class InterfaceBavard extends JFrame implements ActionListener {
+public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener {
     private Bavard bavard;
     private Concierge concierge;
 
-    private JLabel receivedMessage = new JLabel("Messages reçus :");
-    private JLabel sendMessage = new JLabel("Messages envoyés :");
+    private String message = "";
+
+    private JLabel zoneMessage = new JLabel("Chat de la conciergerie:");
     private JLabel labelBavard = new JLabel("Bavard en ligne :");
 
     private JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    private JButton sendMessageButton = new JButton("Nouveau Message");
     private JButton disconnectButton = new JButton("Deconnexion");
 
 
@@ -23,22 +26,21 @@ public class InterfaceBavard extends JFrame implements ActionListener {
     private JTextField consoleInput = new JTextField("",25);
     private JButton consoleButton = new JButton("Executer");
 
-
-
-    JTextPane zoneReceived = new JTextPane();
-    private String messageReceivedString = "";
-    JTextPane zoneSend = new JTextPane();
-    private String messageSendString = "";
-
+    JTextPane zoneMessageTxt = new JTextPane();
     HTMLEditorKit kit = new HTMLEditorKit();
-
     JEditorPane connectedList = new JEditorPane();
 
-    // Construction
+
+    private JLabel subjectLabel = new JLabel("Sujet du message :");
+    private JTextField subjectField = new JTextField("",20);
+    private JLabel messageLabel = new JLabel("Message :");
+    private JTextField messageField = new JTextField("",30);
+    private JButton sendMessageButton = new JButton("Envoyé à tous");
+
+
     public InterfaceBavard (Bavard unBavard){
         super();
         this.bavard = unBavard;
-
         // Definition du titre et de la position de la fenetre
         this.setTitle("Messagerie de " + this.bavard.getName());
         this.setLocation(1050,200);
@@ -56,35 +58,45 @@ public class InterfaceBavard extends JFrame implements ActionListener {
         String charString = "<center><font color=#666666>Il n'y a pas encore d'utilisateur connecté</font></center>";
         connectedList.setText(charString);
 
-        Border border_box =  BorderFactory.createEmptyBorder(30,35,30,35);
+        Border border_box = BorderFactory.createEmptyBorder(30,35,30,35);
 
         // Creation du Layout
         BoxLayout layout = new BoxLayout(panel,BoxLayout.Y_AXIS);
 
-        JScrollPane receivedScrollPane = new JScrollPane(this.zoneReceived);
-        zoneReceived.setEditable(false);
-        zoneReceived.setEditorKit(kit);
-        zoneReceived.setPreferredSize(new Dimension(250, 185));
+        JScrollPane messageScroolPane = new JScrollPane(this.zoneMessageTxt);
+        zoneMessageTxt.setEditable(false);
+        zoneMessageTxt.setEditorKit(kit);
+        zoneMessageTxt.setPreferredSize(new Dimension(250, 185));
 
-        JScrollPane sendScroolPane = new JScrollPane(this.zoneSend);
-        zoneSend.setEditable(false);
-        zoneSend.setEditorKit(kit);
-        zoneSend.setPreferredSize(new Dimension(250, 185));
 
         disconnectButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         sendMessageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        zoneMessage.setAlignmentX(Component.CENTER_ALIGNMENT);
+        labelBavard.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
         panel.setBorder(border_box);
         panel.setLayout(layout);
-        panel.add(receivedMessage);
-        panel.add(receivedScrollPane);
-        panel.add(sendMessage);
-        panel.add(sendScroolPane);
         panel.add(labelBavard);
         panel.add(onlineUserScrollPane);
+        panel.add(zoneMessage);
+        panel.add(messageScroolPane);
+
+
+
+        subjectLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        subjectField.setPreferredSize(new Dimension(250, 30));
+        messageField.setPreferredSize(new Dimension(250, 30));
+
+        panel.add(subjectLabel);
+        panel.add(subjectField);
+        panel.add(messageLabel);
+        panel.add(messageField);
+
+
+
         panel.add(sendMessageButton);
-        panel.add(disconnectButton);
 
 
         consolePanel.setBorder(BorderFactory.createEmptyBorder(20,25,20,25));
@@ -92,6 +104,9 @@ public class InterfaceBavard extends JFrame implements ActionListener {
         consolePanel.add(consoleInput);
         consolePanel.add(consoleButton);
         panel.add(consolePanel);
+
+
+        panel.add(disconnectButton);
 
         // Mise en place des deux boutons
         sendMessageButton.addActionListener(this);
@@ -102,6 +117,7 @@ public class InterfaceBavard extends JFrame implements ActionListener {
 
         consoleButton.addActionListener(this);
         consoleButton.setActionCommand("execute");
+
 
         pack();
         this.setVisible(false);
@@ -123,8 +139,10 @@ public class InterfaceBavard extends JFrame implements ActionListener {
         }
 
         if(e.getActionCommand().equals("newMessage")) { // Creation d'une interfaceMessage
-            InterfaceMessage iM = new InterfaceMessage(bavard,concierge);
-            iM.setConcierge(concierge);
+            //InterfaceMessage iM = new InterfaceMessage(bavard,concierge);
+            //iM.setConcierge(concierge);
+            this.bavard.sendMessageAll(subjectField.getText(),messageField.getText(),this.bavard);
+            //this.dispose();
         }
 
         if(e.getActionCommand().equals("execute")){
@@ -156,22 +174,17 @@ public class InterfaceBavard extends JFrame implements ActionListener {
 
     }
 
-    public void displayMessageReceived(PapotageEvent message, PapotageListener requestor) {
-        String charString ="";
-        charString += this.messageReceivedString = this.messageReceivedString +
-                "<b>De : </b>"+ requestor.getName() +"<br/>" + "<b>Sujet : </b>" + message.getSubject() + "<br/>" + message.getBody() +"<br/>";
-
-        zoneReceived.setText(charString);
-    }
-
-    public void displayMessageSend(PapotageEvent message, PapotageListener receiver) {
+    public void displayMessage(PapotageEvent message, PapotageListener requestor, PapotageListener receiver) {
         String charString = "";
-        charString += this.messageSendString = this.messageSendString
-                + "<b>À : </b>" + receiver.getName() + "<br/>"+"<b>Sujet : </b>" + message.getSubject() + "<br/>" + message.getBody() +"<br/>";
-        zoneSend.setText(charString);
+        if(this.bavard.getName() == requestor.getName()){
+            charString += this.message = this.message +
+                    "<i> <b>Vous avez envoyé : </b> " + message.getSubject() +   " <br/> " +
+                    message.getBody() + "<br/>";
+        }else{
+            charString += this.message = this.message +
+                    "<b>" + requestor.getName() + "</b> : " + message.getSubject() +   " <br/> " +
+                    message.getBody() + "<br/>";
+        }
+        zoneMessageTxt.setText(charString);
     }
-
-
-
-
 }
