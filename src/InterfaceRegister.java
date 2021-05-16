@@ -31,10 +31,6 @@ public class InterfaceRegister extends JFrame implements ActionListener {
         Container mainContainer = this.getContentPane();
         mainContainer.add(this.loginPanel);
 
-        // Ajout des boutons comme ecouteurs
-        loginButton.addActionListener(this);
-        loginButton.setActionCommand("signIn");
-
         // Creation du Layout
         BoxLayout layout = new BoxLayout(loginPanel,BoxLayout.Y_AXIS);
 
@@ -55,6 +51,10 @@ public class InterfaceRegister extends JFrame implements ActionListener {
         loginPanel.add(alertMessage);
         loginPanel.setPreferredSize(new Dimension(450, 60));
 
+        // Ajout des boutons comme ecouteurs
+        loginButton.addActionListener(this);
+        loginButton.setActionCommand("signIn");
+
         pack();
         setVisible(true);
     }
@@ -66,6 +66,7 @@ public class InterfaceRegister extends JFrame implements ActionListener {
             if(bavard != null){
                 bavard.getiB().setVisible(true);
             }
+            inputName.setText("");
         }
     }
 
