@@ -64,8 +64,6 @@ public class InterfaceMessage extends JFrame implements ActionListener{
         // Creation du Layout
         BoxLayout layout = new BoxLayout(inputPanel,BoxLayout.Y_AXIS);
 
-
-
         // Centrage des elements
         receiverLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         subjectLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
