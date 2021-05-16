@@ -40,16 +40,24 @@ public class Concierge {
     }
 
     public void sendMessageOne(PapotageEvent message, PapotageListener receiver, PapotageListener requestor) {
-        receiver.getiB().displayMessageReceived(message,requestor);
-        requestor.getiB().displayMessageSend(message,receiver);
+        //receiver.getiB().displayMessageReceived(message,requestor);
+        //requestor.getiB().displayMessageSend(message,receiver);
+
+        if(receiver != requestor){
+            receiver.getiB().displayMessage(message, requestor, receiver);
+        }
+
+        requestor.getiB().displayMessage(message, requestor, receiver);
         this.getInterfaceGestionnaire().displayMessage(message, requestor, receiver);
     }
 
     public void sendMessageAll(PapotageEvent message, PapotageListener requestor){
         for(PapotageListener unPapotageListener : this.getPapotageListeners()){
             if(!unPapotageListener.equals(requestor)){
-                unPapotageListener.getiB().displayMessageReceived(message,requestor);
-                requestor.getiB().displayMessageSend(message,unPapotageListener);
+                //unPapotageListener.getiB().displayMessageReceived(message,requestor);
+                //requestor.getiB().displayMessageSend(message,unPapotageListener);
+                unPapotageListener.getiB().displayMessage(message,requestor,unPapotageListener);
+                requestor.getiB().displayMessage(message,requestor,unPapotageListener);
                 this.getInterfaceGestionnaire().displayMessage(message,requestor,unPapotageListener);
             }
         }
