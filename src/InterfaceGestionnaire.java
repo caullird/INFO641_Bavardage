@@ -120,10 +120,12 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
     public void displayMessage(PapotageEvent message, PapotageListener requestor, PapotageListener receiver) {
         String charString = "";
         charString += this.message = this.message +
-                "Message de " + requestor.getName()+ " à </b>" + receiver.getName() + "<br/>"+
+                "Message de " + requestor.getName() + " à </b>" + receiver.getName() + "<br/>"+
                 "<b>Sujet : </b>" + message.getSubject() + "<br/> " + message.getBody() + "<br/>";
         zoneMessages.setText(charString);
     }
+
+
 
     public void displayAlertMessage(PapotageEvent unAlert){
 
