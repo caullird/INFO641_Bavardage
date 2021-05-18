@@ -23,7 +23,7 @@ public class InterfaceRegister extends JFrame implements ActionListener {
         super();
 
         setTitle("Connexion");
-        setLocation(140, 720);
+        setLocation(100, 720);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
 
@@ -40,18 +40,17 @@ public class InterfaceRegister extends JFrame implements ActionListener {
         formPanel.add(loginButton);
         formPanel.setVisible(true);
 
-        // Mise en place de alertMessage
+
         alertMessage.setEditable(false);
         alertMessage.setEditorKit(kit);
 
-        // Mise en place de loginPanel
+
         loginPanel.setLayout(layout);
         loginPanel.add(formPanel);
         loginPanel.add(alertMessage);
         loginPanel.add(alertMessage);
-        loginPanel.setPreferredSize(new Dimension(450, 60));
+        loginPanel.setPreferredSize(new Dimension(485, 80));
 
-        // Ajout des boutons comme ecouteurs
         loginButton.addActionListener(this);
         loginButton.setActionCommand("signIn");
 
