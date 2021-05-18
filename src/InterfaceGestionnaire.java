@@ -4,13 +4,15 @@ import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class InterfaceGestionnaire extends JFrame implements ActionListener {
     private Concierge concierge;
 
     private JPanel listernerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     private JLabel listernerChatLabel = new JLabel("Liste des discussions :");
-    private JLabel listernerOnlineLabel = new JLabel("Console :");
+    private JLabel listernerOnlineLabel = new JLabel("Utilisateurs connectés :");
 
     private String message = "";
     private JTextField corps = new JTextField("",15);
@@ -69,10 +71,10 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
         // Mise en place de listernerPanel
         listernerPanel.setBorder(border);
         listernerPanel.setLayout(layout);
-        listernerPanel.add(listernerChatLabel);
-        listernerPanel.add(scrollPaneMessage);
         listernerPanel.add(listernerOnlineLabel);
         listernerPanel.add(scrollPaneOnline);
+        listernerPanel.add(listernerChatLabel);
+        listernerPanel.add(scrollPaneMessage);
         listernerPanel.add(formPanel);
 
         // Ajout des boutons comme ecouteurs
@@ -83,6 +85,8 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
         iR.setConcierge(concierge);
         iR.setInterfaceGestionnaire(this);
         concierge.setInterfaceGestionnaire(this);
+
+
 
         pack();
         setVisible(true);
@@ -119,13 +123,20 @@ public class InterfaceGestionnaire extends JFrame implements ActionListener {
 
     public void displayMessage(PapotageEvent message, PapotageListener requestor, PapotageListener receiver) {
         String charString = "";
+
+        String display_name;
+
+        if(receiver == null){
+            display_name = "tous";
+        }else{
+            display_name = receiver.getName();
+        }
+
         charString += this.message = this.message +
-                "Message de " + requestor.getName() + " à </b>" + receiver.getName() + "<br/>"+
-                "<b>Sujet : </b>" + message.getSubject() + "<br/> " + message.getBody() + "<br/>";
+                "Message de " + requestor.getName() + " à </b>" + display_name + "<br/>"+
+                "<b>Sujet : </b>" + message.getSubject() + "<br/> " + message.getBody() + "<br/></br>";
         zoneMessages.setText(charString);
     }
-
-
 
     public void displayAlertMessage(PapotageEvent unAlert){
 
