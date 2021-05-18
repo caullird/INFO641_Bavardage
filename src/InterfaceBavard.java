@@ -1,14 +1,10 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.html.HTMLEditorKit;
-import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Graphics;
 
-public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener {
+public class InterfaceBavard extends JFrame implements ActionListener {
     private Bavard bavard;
     private Concierge concierge;
 
@@ -18,13 +14,6 @@ public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener 
     private JLabel labelBavard = new JLabel("Bavard en ligne :");
 
     private JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    private JButton disconnectButton = new JButton("Deconnexion");
-
-
-    private JPanel consolePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    private JLabel consoleName = new JLabel("Console : ");
-    private JTextField consoleInput = new JTextField("",25);
-    private JButton consoleButton = new JButton("Executer");
 
     JTextPane zoneMessageTxt = new JTextPane();
     HTMLEditorKit kit = new HTMLEditorKit();
@@ -37,14 +26,23 @@ public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener 
     private JTextField messageField = new JTextField("",30);
     private JButton sendMessageButton = new JButton("Envoyé à tous");
 
+    private JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    private JButton disconnectButton = new JButton("Deconnexion");
+    private JButton mpButton = new JButton("Messagerie privé");
+
 
     public InterfaceBavard (Bavard unBavard){
         super();
         this.bavard = unBavard;
         // Definition du titre et de la position de la fenetre
         this.setTitle("Messagerie de " + this.bavard.getName());
-        this.setLocation(1050,200);
+        this.setLocation(600,170);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent evt) {
+                disconnect();
+            }
+        });
 
         // Creation du container
         Container mainContainer = this.getContentPane();
@@ -54,7 +52,7 @@ public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener 
         JScrollPane onlineUserScrollPane = new JScrollPane(connectedList);
         connectedList.setEditable(false);
         connectedList.setEditorKit(kit);
-        connectedList.setPreferredSize(new Dimension(250, 185));
+        connectedList.setPreferredSize(new Dimension(250, 190));
         String charString = "<center><font color=#666666>Il n'y a pas encore d'utilisateur connecté</font></center>";
         connectedList.setText(charString);
 
@@ -70,6 +68,7 @@ public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener 
 
 
         disconnectButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         sendMessageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         zoneMessage.setAlignmentX(Component.CENTER_ALIGNMENT);
         labelBavard.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -98,15 +97,10 @@ public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener 
 
         panel.add(sendMessageButton);
 
+        buttonPanel.add(disconnectButton);
+        buttonPanel.add(mpButton);
 
-        consolePanel.setBorder(BorderFactory.createEmptyBorder(20,25,20,25));
-        consolePanel.add(consoleName);
-        consolePanel.add(consoleInput);
-        consolePanel.add(consoleButton);
-        panel.add(consolePanel);
-
-
-        panel.add(disconnectButton);
+        panel.add(buttonPanel);
 
         // Mise en place des deux boutons
         sendMessageButton.addActionListener(this);
@@ -115,8 +109,8 @@ public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener 
         disconnectButton.addActionListener(this);
         disconnectButton.setActionCommand("disconnect");
 
-        consoleButton.addActionListener(this);
-        consoleButton.setActionCommand("execute");
+        mpButton.addActionListener(this);
+        mpButton.setActionCommand("mpMessage");
 
 
         pack();
@@ -138,20 +132,28 @@ public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener 
             this.dispose();
         }
 
-        if(e.getActionCommand().equals("newMessage")) { // Creation d'une interfaceMessage
-            //InterfaceMessage iM = new InterfaceMessage(bavard,concierge);
-            //iM.setConcierge(concierge);
+        if(e.getActionCommand().equals(EXIT_ON_CLOSE)) {
+            this.disconnect();
+        }
+
+        if(e.getActionCommand().equals("newMessage")) {
             this.bavard.sendMessageAll(subjectField.getText(),messageField.getText(),this.bavard);
+            subjectField.setText("");
+            messageField.setText("");
+        }
+
+        if(e.getActionCommand().equals("mpMessage")) {
+            InterfaceMessage iM = new InterfaceMessage(bavard,concierge);
+            iM.setConcierge(concierge);
             //this.dispose();
         }
 
-        if(e.getActionCommand().equals("execute")){
-            String command = consoleInput.getText();
 
-            if(command.contains("!ban")){
-                this.bavard.banUser(command);
-            }
-        }
+    }
+
+    public void disconnect(){
+        this.concierge.bavardSignOut(bavard);
+        this.dispose();
     }
 
     public void displayOnlineUser() {
@@ -170,16 +172,13 @@ public class InterfaceBavard<b, Jlist> extends JFrame implements ActionListener 
         connectedList.setText(charString);
     }
 
-    public void displayAlertMessage(PapotageEvent unAlert){
 
-    }
-
-    public void displayMessage(PapotageEvent message, PapotageListener requestor, PapotageListener receiver) {
+    public void displayMessage(PapotageEvent message, PapotageListener requestor) {
         String charString = "";
-        if(this.bavard.getName() == requestor.getName()){
+        if((this.bavard.getName() == requestor.getName())){
             charString += this.message = this.message +
                     "<i> <b>Vous avez envoyé : </b> " + message.getSubject() +   " <br/> " +
-                    message.getBody() + "<br/>";
+                    message.getBody() + "</i><br/>";
         }else{
             charString += this.message = this.message +
                     "<b>" + requestor.getName() + "</b> : " + message.getSubject() +   " <br/> " +
