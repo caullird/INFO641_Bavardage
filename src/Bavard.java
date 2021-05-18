@@ -42,14 +42,23 @@ public class Bavard implements PapotageListener {
         return connected;
     }
 
+    @Override
+    public void responsePrivateMessage(String subject, String body, PapotageListener requestor, PapotageListener receiver, InterfacePrivateMessage iMpRequestor, InterfacePrivateMessage iMpReceiver) {
+        PapotageEvent unPapotageEvent = new PapotageEvent(this, subject,body);
+        this.concierge.createMPReponse(unPapotageEvent,receiver,requestor,iMpRequestor,iMpReceiver);
+    }
+
+
     public void setConnected(Boolean connected) {
         this.connected = connected;
     }
 
-    public void sendMessageOne(String subject, String body, PapotageListener receiver, Bavard requestor) {
+    public void createMessagePrivate(String subject, String body, PapotageListener receiver, Bavard requestor) {
         PapotageEvent unPapotageEvent = new PapotageEvent(this,subject,body);
-        this.concierge.sendMessageOne(unPapotageEvent,receiver,requestor);
+        this.concierge.createMessagePrivate(unPapotageEvent,receiver,requestor);
     }
+
+
 
     public void sendMessageAll(String subject, String body, Bavard requestor){
         PapotageEvent unPapotageEvent = new PapotageEvent(this,subject,body);
@@ -60,17 +69,6 @@ public class Bavard implements PapotageListener {
         System.out.println(papotageEvent);
     }
 
-//    TODO : dorian
-    public void banUser(String command){
-        String user = command.replace("!ban ", "");
-        for(PapotageListener unPapotageListener : this.getConcierge().getPapotageListeners()){
-            if(unPapotageListener.equals(user)){
-                bavards_ban.add(unPapotageListener);
-                PapotageEvent unPapotageEvent = new PapotageEvent(this,"Blocked","Vous avez été bloqué par l'utilisateur");
-                this.concierge.sendMessageOne(unPapotageEvent,unPapotageListener,this);
-            }
-        }
-    }
 
     @Override
     public String toString() {
