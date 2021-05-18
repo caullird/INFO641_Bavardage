@@ -24,7 +24,6 @@ public class InterfaceMessage extends JFrame implements ActionListener{
     private JPanel inputPanel = new JPanel();
     private JPanel inputButton = new JPanel();
 
-    private JButton sendAllButton = new JButton("Envoyer à tous");
     private JButton sendOneButton = new JButton("Envoyer");
     private JButton annulationButton = new JButton("Annuler");
 
@@ -36,17 +35,15 @@ public class InterfaceMessage extends JFrame implements ActionListener{
         this.bavard = bavard;
         this.concierge = concierge;
 
-        setTitle("Nouveau Message");
+        setTitle("Messagerie privé");
         this.setSize(800,500);
         this.setLocationRelativeTo(null);
 
-        for(PapotageListener pl : this.concierge.getPapotageListeners()) {
-            contactList.addItem(pl.getName());
+        for(PapotageListener unPapotageListener : this.concierge.getPapotageListeners()) {
+            if((unPapotageListener.getName() != this.bavard.getName()) && unPapotageListener.getConnected()) {
+                contactList.addItem(unPapotageListener.getName());
+            }
         }
-
-        // Mise en place des boutons
-        sendAllButton.addActionListener(this);
-        sendAllButton.setActionCommand("sendAll");
 
         sendOneButton.addActionListener(this);
         sendOneButton.setActionCommand("sendOne");
@@ -68,7 +65,6 @@ public class InterfaceMessage extends JFrame implements ActionListener{
         receiverLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         subjectLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         messageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        sendAllButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         sendOneButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         annulationButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -81,7 +77,6 @@ public class InterfaceMessage extends JFrame implements ActionListener{
         inputPanel.add(subjectField);
         inputPanel.add(messageLabel);
         inputPanel.add(messageField);
-        inputButton.add(sendAllButton);
         inputButton.add(sendOneButton);
         inputButton.add(annulationButton);
         inputPanel.add(inputButton);
@@ -99,12 +94,7 @@ public class InterfaceMessage extends JFrame implements ActionListener{
         if(e.getActionCommand().equals("sendOne")) {
             Object selected = this.contactList.getSelectedItem();
             PapotageListener destinataire = this.findOneObject(selected);
-            this.bavard.sendMessageOne(subjectField.getText(), messageField.getText(), destinataire,this.bavard);
-            this.dispose();
-        }
-
-        if(e.getActionCommand().equals("sendAll")){
-            this.bavard.sendMessageAll(subjectField.getText(),messageField.getText(),this.bavard);
+            this.bavard.createMessagePrivate(subjectField.getText(), messageField.getText(), destinataire,this.bavard);
             this.dispose();
         }
     }
