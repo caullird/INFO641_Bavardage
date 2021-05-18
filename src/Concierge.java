@@ -39,29 +39,43 @@ public class Concierge {
         return bavard;
     }
 
-    public void sendMessageOne(PapotageEvent message, PapotageListener receiver, PapotageListener requestor) {
-        //receiver.getiB().displayMessageReceived(message,requestor);
-        //requestor.getiB().displayMessageSend(message,receiver);
+    public void createMessagePrivate(PapotageEvent message, PapotageListener receiver, PapotageListener requestor) {
 
-        if(receiver != requestor){
-            receiver.getiB().displayMessage(message, requestor, receiver);
-        }
+        InterfacePrivateMessage interfaceBavardRequestor = new InterfacePrivateMessage(requestor,receiver);
+        interfaceBavardRequestor.setBavardRequestor(requestor);
+        interfaceBavardRequestor.setBavardReceiver(receiver);
+        interfaceBavardRequestor.setVisible(true);
 
-        requestor.getiB().displayMessage(message, requestor, receiver);
+
+        InterfacePrivateMessage interfaceBavardReceiver = new InterfacePrivateMessage(receiver,requestor);
+        interfaceBavardReceiver.setBavardRequestor(receiver);
+        interfaceBavardReceiver.setBavardReceiver(requestor);
+        interfaceBavardReceiver.setVisible(true);
+
+        interfaceBavardRequestor.setinterfaceMPReceiver(interfaceBavardReceiver);
+        interfaceBavardReceiver.setinterfaceMPReceiver(interfaceBavardRequestor);
+
+        interfaceBavardRequestor.displayMessage(message, requestor);
+        interfaceBavardReceiver.displayMessage(message, requestor);
+
         this.getInterfaceGestionnaire().displayMessage(message, requestor, receiver);
     }
 
     public void sendMessageAll(PapotageEvent message, PapotageListener requestor){
         for(PapotageListener unPapotageListener : this.getPapotageListeners()){
             if(!unPapotageListener.equals(requestor)){
-                //unPapotageListener.getiB().displayMessageReceived(message,requestor);
-                //requestor.getiB().displayMessageSend(message,unPapotageListener);
-                unPapotageListener.getiB().displayMessage(message,requestor,unPapotageListener);
-                requestor.getiB().displayMessage(message,requestor,unPapotageListener);
-                this.getInterfaceGestionnaire().displayMessage(message,requestor,unPapotageListener);
+                unPapotageListener.getiB().displayMessage(message,requestor);
             }
         }
+        requestor.getiB().displayMessage(message,requestor);
+        this.getInterfaceGestionnaire().displayMessage(message,requestor,null);
 
+    }
+
+    public void createMPReponse (PapotageEvent message, PapotageListener receiver, PapotageListener requestor, InterfacePrivateMessage iMpRequestor,InterfacePrivateMessage iMpReceiver){
+        iMpReceiver.displayMessage(message,requestor);
+        iMpRequestor.displayMessage(message,requestor);
+        this.getInterfaceGestionnaire().displayMessage(message,requestor,receiver);
     }
 
     public Bavard bavardSignIn(String name, InterfaceRegister interfaceRegister) {
@@ -75,9 +89,7 @@ public class Concierge {
                 return bavard;
             }
         }
-
         interfaceRegister.displayInformationMessage("L'utilsiateur " + name + " n'existe pas",true);
-
         return null;
     }
 
@@ -88,5 +100,9 @@ public class Concierge {
     public void bavardSignOut(Bavard bavard) {
         bavard.setConnected(false);
         this.interfaceGestionnaire.displayOnlineUser();
+        for(PapotageListener unPapotageListener : this.getPapotageListeners()){
+            unPapotageListener.getiB().displayOnlineUser();
+        }
+
     }
 }
