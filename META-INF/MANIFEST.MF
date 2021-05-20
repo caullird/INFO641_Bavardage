@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: MainTest
+Class-Path: out/production/INFO641_Bavardage/MainTest
+

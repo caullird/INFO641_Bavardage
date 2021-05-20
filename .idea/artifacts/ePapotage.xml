@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact build-on-make="true" name="ePapotage">
+    <output-path>$PROJECT_DIR$/out/artifacts/ePapotage</output-path>
+    <root id="root">
+      <element id="archive" name="INFO641_Bavardage.jar">
+        <element id="module-output" name="INFO641_Bavardage" />
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="archive" name="archive.jar" />
+      </element>
+    </root>
+  </artifact>
+</component>
